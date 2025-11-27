@@ -12,7 +12,10 @@ app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    all_items = items.get_items()
+    return render_template("index.html", items=all_items)
+
+
 
 @app.route("/new_item")
 def new_item():
@@ -28,10 +31,9 @@ def create_items():
     rate = request.form["rate"]
     user_id = session["user_id"]
 
-    sql = """INSERT INTO items (title, author, genre, description, rate, user_id) 
-               VALUES (?, ?,?, ?, ?, ?)"""
-    
-    db.execute(sql, [title, author, genre, description, rate, user_id])
+    items.add_item(title, author, genre, description, rate, user_id)
+
+
 
     return redirect("/")
 
@@ -71,12 +73,16 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        
+
         sql = "SELECT id, password_hash FROM users WHERE username = ?"
-        result = db.query(sql, [username])[0]
-        user_id = result["id"]
-        password_hash = result["password"]
- #poista:       password_hash = db.query(sql, [username])[0][0]
+        result = db.query(sql, [username])
+
+        # Käyttäjää ei löytynyt
+        if not result:
+            return "VIRHE: väärä tunnus tai salasana"
+
+        user_id = result[0][0]         
+        password_hash = result[0][1]  
 
         if check_password_hash(password_hash, password):
             session["user_id"] = user_id
@@ -84,6 +90,7 @@ def login():
             return redirect("/")
         else:
             return "VIRHE: väärä tunnus tai salasana"
+
 
 @app.route("/logout")
 def logout():
