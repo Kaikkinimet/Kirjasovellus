@@ -13,7 +13,6 @@ app.secret_key = config.secret_key
 def index():
     return render_template("index.html")
 
-
 @app.route("/register")
 def register():
     return render_template("register.html")
@@ -42,7 +41,6 @@ def create():
 def login():
     if request.method == "GET":
         return render_template("login.html")
-
 
     if request.method == "POST":
         username = request.form["username"]
