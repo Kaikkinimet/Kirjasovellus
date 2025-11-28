@@ -26,7 +26,6 @@ def show_item(item_id):
 def new_item():
     return render_template("new_item.html")
 
-
 @app.route("/create_items", methods=["POST"])
 def create_items():
     if "user_id" not in session:
@@ -42,6 +41,22 @@ def create_items():
     items.add_item(title, author, genre, description, rate, user_id)
     return redirect("/")
 
+
+@app.route("/edit_item/<int:item_id>")
+def edit_item(item_id):
+    item = items.get_item(item_id)
+    return render_template("edit_item.html", item=item)
+
+
+@app.route("/update_item/<int:item_id>", methods=["POST"])
+def update_item(item_id):
+    title = request.form["title"]
+    author = request.form["author"]
+    genre = request.form["genre"]
+    description = request.form["description"]
+    rate = request.form["rate"]
+    items.update_item(item_id, title, author, genre, description, rate)
+    return redirect(f"/item/{item_id}")
 
 
 @app.route("/register")

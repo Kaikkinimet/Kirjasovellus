@@ -10,7 +10,33 @@ def get_items():
     sql = "SELECT id, title FROM items ORDER BY id DESC"
     return db.query(sql)
 
+
 def get_item(item_id):
-    sql = "SELECT id, title, author, genre, description, rate, user_id FROM items WHERE id = ?"
+    sql = """
+        SELECT 
+            items.id,
+            items.title,
+            items.author,
+            items.genre,
+            items.description,
+            items.rate,
+            items.user_id,
+            users.username
+        FROM items
+        JOIN users ON items.user_id = users.id
+        WHERE items.id = ?
+    """
     result = db.query(sql, [item_id])
     return result[0] if result else None
+
+
+def update_item(item_id, title, author, genre, description, rate):
+    sql = """
+        UPDATE items
+        SET title = ?, author = ?, genre = ?, description = ?, rate = ?
+        WHERE id = ?
+    """
+    db.execute(sql, [title, author, genre, description, rate, item_id])
+
+
+        

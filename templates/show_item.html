@@ -6,11 +6,21 @@
 
 <body>
     <h1>{{ item[1] }}</h1>
+    
+    {% if session.get("user_id") == item[6] %}
+    <p>
+        <a href ="/edit_item/{{ item.id }}" >Muokkaa</a>
 
-    <p><b>Kirjailija:</b> {{ item[2] }}</p>
-    <p><b>Genre:</b> {{ item[3] }}</p>
-    <p><b>Kuvaus:</b> {{ item[4] }}</p>
-    <p><b>Arvosana:</b> {{ item[5] }}</p>
+    </p>
+    {% endif %}
+
+    <p><b>Kirjailija:</b> {{ item.author }}</p>
+    <p><b>Genre:</b> {{ item.genre }}</p>
+    <p><b>Kuvaus:</b> {{ item.description }}</p>
+    <p><b>Arvosana:</b> {{ item.rate }}</p>
+    <p><b>Lisääjä:</b> {{ item.username }}</p>
+
+
 
     <p>
         <a href="/">Takaisin etusivulle</a>
