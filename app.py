@@ -83,6 +83,14 @@ def create():
 
     return "Tunnus luotu"
 
+
+
+@app.route("/remove_item/<int:item_id>")
+def remove_item(item_id):
+    item = items.get_item(item_id)
+    return render_template("remove_item.html", item=item)
+
+
 #-============
 #KIRJAUTUMINEN
 #=============
