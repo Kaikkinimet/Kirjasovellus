@@ -16,6 +16,11 @@ def index():
     return render_template("index.html", items=all_items)
 
 
+@app.route("/item/<int:item_id>")
+def show_item(item_id):
+    item = items.get_item(item_id)
+    return render_template("show_item.html", item=item)
+
 
 @app.route("/new_item")
 def new_item():
@@ -24,6 +29,9 @@ def new_item():
 
 @app.route("/create_items", methods=["POST"])
 def create_items():
+    if "user_id" not in session:
+        return redirect("/login")
+
     title = request.form["title"]
     author = request.form["author"]
     genre = request.form["genre"]
@@ -32,10 +40,8 @@ def create_items():
     user_id = session["user_id"]
 
     items.add_item(title, author, genre, description, rate, user_id)
-
-
-
     return redirect("/")
+
 
 
 @app.route("/register")
